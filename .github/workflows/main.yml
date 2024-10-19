@@ -28,16 +28,16 @@ jobs:
       - name: Build the Nest.js application
         run: npm run build
 
-      # Step 5: Deploy to server via SSH
+      # Step 5: Deploy to EC2 via SSH
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}       # Your EC2 public IP stored in GitHub Secrets
+          host: ${{ secrets.HOST }}         # Your EC2 public IP stored in GitHub Secrets
           username: ${{ secrets.USERNAME }} # EC2 username (typically 'ubuntu')
-          key: ${{ secrets.SSH_KEY }}      # Private SSH key stored in GitHub Secrets
+          key: ${{ secrets.SSH_KEY }}       # Private SSH key stored in GitHub Secrets
           script: |
-            cd /home/ubuntu/test-nestjs
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart nestjs
+            cd /home/ubuntu/test-nestjs     # Change directory to your project on the EC2 instance
+            git pull origin main            # Pull the latest changes
+            npm install                     # Install dependencies
+            npm run build                   # Build the application
+            pm2 restart nestjs              # Restart the Nest.js app using PM2
