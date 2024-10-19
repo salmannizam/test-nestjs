@@ -12,6 +12,6 @@ export class AppController {
 
   @Get('api/user')
   getUser(): string {
-    return "hello from user";
+    return "hello from users";
   }
 }
