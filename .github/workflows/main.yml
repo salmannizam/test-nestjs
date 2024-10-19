@@ -3,33 +3,38 @@ name: Deploy Nest.js
 on:
   push:
     branches:
-      - main
+      - main  # Trigger the workflow on pushes to the main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Check out the code from the repository
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Build the Nest.js application
       - name: Build the Nest.js application
         run: npm run build
 
+      # Step 5: Deploy to server via SSH
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.HOST }}       # Your EC2 public IP stored in GitHub Secrets
+          username: ${{ secrets.USERNAME }} # EC2 username (usually 'ubuntu')
+          key: ${{ secrets.SSH_KEY }}      # Private SSH key stored in GitHub Secrets
           script: |
             cd /home/ubuntu/test-nestjs
             git pull origin main
